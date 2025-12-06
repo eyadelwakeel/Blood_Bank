@@ -32,7 +32,7 @@ class DonationRequestController extends Controller
             $query->where('blood_type_id',$donation_request->blood_type_id);
         })->whereHas('governorates',function($query) use ($donation_request){
             $query->where('governorate_id',$donation_request->city->governorate_id);
-        })->pluck('id')->toArray();
+        });
 
 
         $users_ids = $users_query->pluck('id')->toArray();
@@ -44,10 +44,14 @@ class DonationRequestController extends Controller
 
         if(!empty($users)){
 
-            $notification->users()->attach($users);
+            $notification->users()->attach($users_ids);
 
             //push fcm notification
 
+            $users = $users_query->get();
+            foreach ($users as $user){
+                $client->notify(new DonationR)
+            }
             //get token for each client
 
             //push notification to each client
