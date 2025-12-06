@@ -2,47 +2,72 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BloodType;
+use App\Models\DonationRequest;
+use App\Models\Notification;
+use App\Models\Citiy;
+use App\Models\Governorate;
+use App\Models\ContactUs;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\Post;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+    public $timestamps = true;
+
     protected $fillable = [
         'name',
         'email',
+        'birth_date',
+        'last_donation_date',
+        'phone',
         'password',
+        'blood_type_id',
+        'city_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function bloodTypes()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(BloodType::class, 'blood_type_user','user_id','blood_type_id');
     }
+    public function bloodType()
+    {
+        return $this->belongsTo(BloodType::class, 'blood_type_id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(Citiy::class, 'city_id');
+    }
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+
+    public function contact_us()
+    {
+        return $this->hasMany(ContactUs::class);
+    }
+
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class)->withPivot('is_read')->withTimestamps();
+    }
+
+    public function governorates()
+    {
+        return $this->belongsToMany(Governorate::class, 'governorate_user', 'user_id', 'governorate_id');
+    }
+
+    public function donation_requests()
+    {
+        return $this->hasMany(DonationRequest::class);
+    }
+
 }

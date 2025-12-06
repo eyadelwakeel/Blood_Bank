@@ -16,7 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->date('birth_date');
+            $table->date('last_donation_date');
+            $table->string('phone');
             $table->string('password');
+            $table->unsignedInteger('blood_type_id');
+            $table->unsignedInteger('city_id');
             $table->rememberToken();
             $table->timestamps();
         });
