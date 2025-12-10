@@ -69,5 +69,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(DonationRequest::class);
     }
+    /**
+     * Specifies the user's FCM tokens
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFcm()
+    {
+        return $this->getDevicesTokens();
+    }
+    public function getDevicesTokens():array
+    {
+        return $this->tokens()->pluck('fcm_token')->toArray();
+    }
 
 }
