@@ -8,7 +8,7 @@ class CreateDonationRequestsTable extends Migration {
 	public function up()
 	{
 		Schema::create('donation_requests', function(Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->string('name');
 			$table->string('age');
 			$table->unsignedInteger('blood_type_id');
